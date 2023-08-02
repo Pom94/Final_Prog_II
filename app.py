@@ -1,7 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 import json
 
 app = Flask(__name__)
+app.secret_key = 'pomela'
+
 
 """___INICIAR SESION___"""
 
@@ -15,10 +17,10 @@ def iniciarSesion():
         usuarios = json.load(f)
 
     if usuario in usuarios and usuarios[usuario] == contraseña:
+        session['usuario'] = usuario
         return jsonify({'mensaje': 'Ha iniciado sesión.'})
     else:
         return jsonify({'mensaje': 'Usuario o contraseña incorrecta.'})
-    
     
     
 
@@ -35,16 +37,20 @@ def agregarPelicula():
     with open('data/generos.json', 'r') as f:
         generos  = json.load(f)
 
-    for pelicula in peliculas:
-        if pelicula['titulo'] == peliculaAgregar['titulo']:
-            return jsonify({'mensaje': 'La pelicula ya existe.'}, peliculas)
-        elif peliculaAgregar['director'] in directores or peliculaAgregar['genero'] in generos :
-            peliculaAgregar['comentarios'] = [peliculaAgregar['comentario']]
-            del peliculaAgregar['comentario']
-            peliculas.append(peliculaAgregar)
-            return jsonify({'mensaje': 'Su pelicula ha sido agregada'}, peliculas)
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+
+        for pelicula in peliculas:
+            if pelicula['titulo'] == peliculaAgregar['titulo']:
+                return jsonify({'mensaje': 'La pelicula ya existe.'}, peliculas)
+            elif peliculaAgregar['director'] in directores or peliculaAgregar['genero'] in generos :
+                peliculaAgregar['comentarios'] = [peliculaAgregar['comentario']]
+                del peliculaAgregar['comentario']
+                peliculas.append(peliculaAgregar)
+                return jsonify({'mensaje': 'Su pelicula ha sido agregada'}, peliculas)
     
-    return jsonify({'mensaje': 'El director o genero de la pelicula no se encuentra.'})
+        return jsonify({'mensaje': 'El director o genero de la pelicula no se encuentra.'})
 
 
     
@@ -55,9 +61,11 @@ def peliculasDirector(director):
     with open('data/peliculas.json', 'r') as f:
         peliculas  = json.load(f)
 
-    peliculasDirector = [pelicula for pelicula in peliculas if pelicula['director'] == director]
-
-    return jsonify(peliculasDirector)
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        peliculasDirector = [pelicula for pelicula in peliculas if pelicula['director'] == director]
+        return jsonify(peliculasDirector)
 
     
 
@@ -73,23 +81,44 @@ def editarPelicula(titulo):
         directores  = json.load(f)
     with open('data/generos.json', 'r') as f:
         generos  = json.load(f)
-    
-    for pelicula in peliculas:
-        if 'titulo' not in peliculaEditar or 'anio' not in peliculaEditar or 'director' not in peliculaEditar or 'genero' not in peliculaEditar or 'sinopsis' not in peliculaEditar or 'imagen' not in peliculaEditar:
-            return jsonify({'mensaje': 'Faltan datos de la pelicula.'})
-        elif peliculaEditar['director'] not in directores or peliculaEditar['genero'] not in generos :
-            return jsonify({'mensaje': 'El director o genero de la pelicula no se encuentra.'})
-        elif pelicula['titulo'] == titulo and len(pelicula['comentarios']) > 0:
-            return jsonify({'mensaje': 'No se puede editar pelicula que contengan comentarios ya hechos.'})
-        elif pelicula['titulo'] == titulo and peliculaEditar['titulo'] == titulo:
-            pelicula = peliculaEditar
-            return jsonify({'mensaje': 'La pelicula fue editada.'}, pelicula)
-        else:
-            return jsonify({'mensaje': 'No se encontro pelicula'})
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        for pelicula in peliculas:
+            if 'titulo' not in peliculaEditar or 'anio' not in peliculaEditar or 'director' not in peliculaEditar or 'genero' not in peliculaEditar or 'sinopsis' not in peliculaEditar or 'imagen' not in peliculaEditar:
+                return jsonify({'mensaje': 'Faltan datos de la pelicula.'})
+            elif peliculaEditar['director'] not in directores or peliculaEditar['genero'] not in generos :
+                return jsonify({'mensaje': 'El director o genero de la pelicula no se encuentra.'})
+            elif pelicula['titulo'] == titulo and len(pelicula['comentarios']) > 0:
+                return jsonify({'mensaje': 'No se puede editar pelicula que contengan comentarios ya hechos.'}, pelicula)
+            elif pelicula['titulo'] == titulo and peliculaEditar['titulo'] == titulo:
+                pelicula = peliculaEditar
+                return jsonify({'mensaje': 'La pelicula fue editada.'}, pelicula)
+            else:
+                return jsonify({'mensaje': 'No se encontro pelicula'})
 
     
         
 
+"""___ELIMINAR PELICULA___"""
+@app.route('/<string:titulo>/borrar', methods=['DELETE'])  
+def borrarPelicula(titulo):
+    with open('data/peliculas.json', 'r') as f:
+        peliculas  = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        for pelicula in peliculas:
+            if pelicula['titulo'] == titulo and len(pelicula['comentarios']) == 0:
+                peliculas.remove(pelicula)
+                return jsonify({'mensaje': 'La pelicula fue eliminada.'}, peliculas)
+            elif pelicula['titulo'] == titulo and len(pelicula['comentarios']) > 0:
+                return jsonify({'mensaje': 'No se puede eliminar pelicula que contengan comentarios ya hechos.'}, pelicula)
+        return jsonify({'mensaje': 'No se encontro pelicula'})
+        
+    
 
 
 
