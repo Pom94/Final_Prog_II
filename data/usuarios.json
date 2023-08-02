@@ -1,23 +1,5 @@
-[
-    {
-        "id": 1,
-        "usuario": "cocoloco",
-        "contraseña": "coco2019" 
+{"cocoloco": "coco2019",
+"rrratonwaton": "rrraton2021",
+"luchopelucho": "luchencio" 
      
-    },
-
-    {
-        "id": 2,
-        "usuario": "rrratonwaton",
-        "contraseña": "rrraton2021" 
-     
-    },
-
-    {
-        "id": 3,
-        "usuario": "luchopelucho",
-        "contraseña": "luchencio" 
-     
-    }
-
-]
+}

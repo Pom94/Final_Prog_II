@@ -1,20 +1,38 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+import json
 
 app = Flask(__name__)
 
-from peliculas import peliculas
+"""___INICIAR SESION___"""
 
-@app.route('/peliculas', methods=['GET'])
-def devolverPeliculas():
-    return jsonify({"peliculas": peliculas})
+@app.route('/iniciar sesion', methods=['POST'])
+def iniciarSesion():
+    datos = request.get_json()
+    usuario = datos['usuario']
+    contraseña = datos['contraseña']
+
+    with open('data/usuarios.json', 'r') as f:
+        usuarios = json.load(f)
+
+    if usuario in usuarios and usuarios[usuario] == contraseña:
+        return jsonify({'mensaje': 'Ha iniciado sesión.'})
+    else:
+        return jsonify({'mensaje': "Usuario o contraseña incorrecta."})
+    
+    
 
 
-@app.route('/peliculas/<string:tituloPelicula>')
-def devolverPelicula(tituloPelicula):
-    peliculaEncontrada = [pelicula for pelicula in peliculas if pelicula['titulo'] == tituloPelicula]   
-    if (len(peliculaEncontrada) > 0):
-        return jsonify({"pelicula": peliculaEncontrada[0]})
-    return jsonify({"mensaje": "No se encontro pelicula"})
+
+"""___RUTA PARA PAGINA PÚBLICA___"""
+
+@app.route('/publico', methods=['GET'])
+def devolverPublico():
+    with open('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+    peliculasPublicas = peliculas
+    return jsonify(peliculasPublicas)
+
+
     
 
 
