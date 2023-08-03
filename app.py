@@ -48,7 +48,7 @@ def agregarPelicula():
                 peliculaAgregar['comentarios'] = [peliculaAgregar['comentario']]
                 del peliculaAgregar['comentario']
                 peliculas.append(peliculaAgregar)
-                return jsonify({'mensaje': 'Su pelicula ha sido agregada'}, peliculas)
+                return jsonify({'mensaje': 'Su pelicula ha sido agregada'}, pelicula)
     
         return jsonify({'mensaje': 'El director o genero de la pelicula no se encuentra.'})
 
@@ -65,7 +65,7 @@ def peliculasDirector(director):
         return jsonify({'mensaje': 'No ha iniciado sesion'})
     else:
         peliculasDirector = [pelicula for pelicula in peliculas if pelicula['director'] == director]
-        return jsonify(peliculasDirector)
+        return jsonify({'mensaje': 'Peliculas por director'}, peliculasDirector)
 
     
 
@@ -96,7 +96,7 @@ def editarPelicula(titulo):
                 pelicula = peliculaEditar
                 return jsonify({'mensaje': 'La pelicula fue editada.'}, pelicula)
             else:
-                return jsonify({'mensaje': 'No se encontro pelicula'})
+                return jsonify({'mensaje': 'No se encontro pelicula'}, peliculas)
 
     
         
@@ -116,18 +116,65 @@ def borrarPelicula(titulo):
                 return jsonify({'mensaje': 'La pelicula fue eliminada.'}, peliculas)
             elif pelicula['titulo'] == titulo and len(pelicula['comentarios']) > 0:
                 return jsonify({'mensaje': 'No se puede eliminar pelicula que contengan comentarios ya hechos.'}, pelicula)
-        return jsonify({'mensaje': 'No se encontro pelicula'})
+        return jsonify({'mensaje': 'No se encontro pelicula'}, peliculas)
         
     
 
+"""___DEVOLVER LISTA DE DIRECTORES___"""
+@app.route('/directores', methods=['GET'])
+def devolverDirectores():
+    with open('data/directores.json', 'r') as f:
+        directores = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        return jsonify({'mensaje': 'Estos son los directores registrados en la plataforma'}, directores)
 
 
+
+
+"""___DEVOLVER LISTA DE GENEROS___"""
+@app.route('/generos', methods=['GET'])
+def devolverGeneros():
+    with open('data/generos.json', 'r') as f:
+        generos = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        return jsonify({'mensaje': 'Estos son los generos registrados en la plataforma'}, generos)
+    
+
+
+    
+"""___DEVOLVER LISTA DE PELICULAS CON IMAGEN DE PORTADA___"""
+@app.route('/peliculas con portada', methods=['GET'])
+def devolverPeliculasPortada():
+    with open('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        peliculasPortada = [pelicula for pelicula in peliculas if pelicula['imagen'] != ""]
+        return jsonify({'mensaje': 'Peliculas que poseen imagen de portada.'}, peliculasPortada)
+    
+
+
+
+"""___ABM DE CADA PELICULA___"""
+
+
+
+
+"""___PAGINADO___"""
 
     
     
 
 
-
+ 
 
 
 """___RUTA PARA PAGINA PÚBLICA___"""
