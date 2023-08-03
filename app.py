@@ -28,6 +28,10 @@ def iniciarSesion():
 
 @app.route('/agregar pelicula', methods=['POST'])
 def agregarPelicula():
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+    
     peliculaAgregar = request.get_json()
 
     with open('data/peliculas.json', 'r') as f:
@@ -43,7 +47,7 @@ def agregarPelicula():
 
         for pelicula in peliculas:
             if pelicula['titulo'] == peliculaAgregar['titulo']:
-                return jsonify({'mensaje': 'La pelicula ya existe.'}, peliculas)
+                return jsonify({'mensaje': 'La pelicula ya existe.'}, paginado(peliculas, pagina, porPagina))
             elif peliculaAgregar['director'] in directores or peliculaAgregar['genero'] in generos :
                 peliculaAgregar['comentarios'] = [peliculaAgregar['comentario']]
                 del peliculaAgregar['comentario']
@@ -58,6 +62,10 @@ def agregarPelicula():
 """___DEVOLVER PELICULAS POR DIRECTOR___"""
 @app.route('/peliculas por director/<string:director>', methods=['GET'])
 def peliculasDirector(director):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+
     with open('data/peliculas.json', 'r') as f:
         peliculas  = json.load(f)
 
@@ -65,7 +73,8 @@ def peliculasDirector(director):
         return jsonify({'mensaje': 'No ha iniciado sesion'})
     else:
         peliculasDirector = [pelicula for pelicula in peliculas if pelicula['director'] == director]
-        return jsonify({'mensaje': 'Peliculas por director'}, peliculasDirector)
+        return jsonify({'mensaje': 'Peliculas por director'}, paginado(peliculasDirector, pagina, porPagina))
+    
 
     
 
@@ -73,6 +82,10 @@ def peliculasDirector(director):
 """___EDITAR PELICULA___"""        
 @app.route('/editar/<string:titulo>', methods=['PUT'])    
 def editarPelicula(titulo):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+    
     peliculaEditar = request.get_json()
 
     with open('data/peliculas.json', 'r') as f:
@@ -95,8 +108,7 @@ def editarPelicula(titulo):
             elif pelicula['titulo'] == titulo and peliculaEditar['titulo'] == titulo:
                 pelicula = peliculaEditar
                 return jsonify({'mensaje': 'La pelicula fue editada.'}, pelicula)
-            else:
-                return jsonify({'mensaje': 'No se encontro pelicula'}, peliculas)
+        return jsonify({'mensaje': 'No se encontro pelicula'}, paginado(peliculas, pagina, porPagina))
 
     
         
@@ -104,6 +116,10 @@ def editarPelicula(titulo):
 """___ELIMINAR PELICULA___"""
 @app.route('/<string:titulo>/borrar', methods=['DELETE'])  
 def borrarPelicula(titulo):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+
     with open('data/peliculas.json', 'r') as f:
         peliculas  = json.load(f)
 
@@ -113,23 +129,27 @@ def borrarPelicula(titulo):
         for pelicula in peliculas:
             if pelicula['titulo'] == titulo and len(pelicula['comentarios']) == 0:
                 peliculas.remove(pelicula)
-                return jsonify({'mensaje': 'La pelicula fue eliminada.'}, peliculas)
+                return jsonify({'mensaje': 'La pelicula fue eliminada.'}, paginado(peliculas, pagina, porPagina))
             elif pelicula['titulo'] == titulo and len(pelicula['comentarios']) > 0:
                 return jsonify({'mensaje': 'No se puede eliminar pelicula que contengan comentarios ya hechos.'}, pelicula)
-        return jsonify({'mensaje': 'No se encontro pelicula'}, peliculas)
+        return jsonify({'mensaje': 'No se encontro pelicula'}, paginado(peliculas, pagina, porPagina))
         
     
 
 """___DEVOLVER LISTA DE DIRECTORES___"""
 @app.route('/directores', methods=['GET'])
 def devolverDirectores():
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 10))
+
     with open('data/directores.json', 'r') as f:
         directores = json.load(f)
 
     if 'usuario' not in session:
         return jsonify({'mensaje': 'No ha iniciado sesion'})
     else:
-        return jsonify({'mensaje': 'Estos son los directores registrados en la plataforma'}, directores)
+        return jsonify({'mensaje': 'Estos son los directores registrados en la plataforma'}, paginado(directores, pagina, porPagina))
 
 
 
@@ -137,13 +157,17 @@ def devolverDirectores():
 """___DEVOLVER LISTA DE GENEROS___"""
 @app.route('/generos', methods=['GET'])
 def devolverGeneros():
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 10))
+
     with open('data/generos.json', 'r') as f:
         generos = json.load(f)
 
     if 'usuario' not in session:
         return jsonify({'mensaje': 'No ha iniciado sesion'})
     else:
-        return jsonify({'mensaje': 'Estos son los generos registrados en la plataforma'}, generos)
+        return jsonify({'mensaje': 'Estos son los generos registrados en la plataforma'}, paginado(generos, pagina, porPagina))
     
 
 
@@ -151,6 +175,10 @@ def devolverGeneros():
 """___DEVOLVER LISTA DE PELICULAS CON IMAGEN DE PORTADA___"""
 @app.route('/peliculas con portada', methods=['GET'])
 def devolverPeliculasPortada():
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+
     with open('data/peliculas.json', 'r') as f:
         peliculas = json.load(f)
 
@@ -158,20 +186,141 @@ def devolverPeliculasPortada():
         return jsonify({'mensaje': 'No ha iniciado sesion'})
     else:
         peliculasPortada = [pelicula for pelicula in peliculas if pelicula['imagen'] != ""]
-        return jsonify({'mensaje': 'Peliculas que poseen imagen de portada.'}, peliculasPortada)
+        return jsonify({'mensaje': 'Peliculas que poseen imagen de portada.'}, paginado(peliculasPortada, pagina, porPagina))
     
-
-
-
-"""___ABM DE CADA PELICULA___"""
 
 
 
 
 """___PAGINADO___"""
+def paginado(i, pagina, porPagina):
+
+    comienzo = (pagina - 1) * porPagina
+    final = comienzo + porPagina
+
+    subconjunto = i[comienzo:final]
+    return subconjunto
+
+
+
+
+"""___BUSCADOR DE PELICULAS___"""
+@app.route('/pelicula/<string:titulo>/buscar', methods=['GET'])
+def buscarPelicula(titulo):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+
+    with open('data/peliculas.json', 'r') as f:
+        peliculas  = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        for pelicula in peliculas:
+            if pelicula['titulo'] == titulo:
+                return jsonify(pelicula)
+        return jsonify({'mensaje': 'No se encontro pelicula'}, paginado(peliculas, pagina, porPagina))
+    
+
+
+"""___BUSCADOR DE DIRECTORES___"""
+@app.route('/director/<string:director>/buscar', methods=['GET'])
+def buscarDirector(director):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 10))
+
+    with open('data/directores.json', 'r') as f:
+        directores  = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'})
+    else:
+        for i in directores:
+            if i == director:
+                return jsonify(i)
+        return jsonify({'mensaje': 'No se encontro director'}, paginado(directores, pagina, porPagina))
+    
+
+
+
+"""___ABM DE USUARIOS___"""
+"""___ALTA___"""
+@app.route('/registrar', methods=['POST'])
+def altaUsuario():
+
+    usuarioNuevo = request.get_json('usuario')
+    contraseñaNueva = request.get_json('contraseña')
+
+    if not usuarioNuevo or not contraseñaNueva:
+        return jsonify({'mensaje': 'Faltan datos'})
+    
+    with open('data/usuarios.json', 'r') as f:
+        usuarios = json.load(f)
+
+    if usuarioNuevo['usuario'] in usuarios:
+        return jsonify({'mensaje': 'El nombre de usuario ya existe.'})
+    
+    with open('data/usuarios.json', 'w') as f:
+        json.dump(usuarios, f)
+
+    return jsonify({'mensaje': 'El usuario ha sido registrado.'})
+
+
+"""___BAJA___"""
+@app.route('/baja', methods=['DELETE'])
+def bajaUsuario():
+    usuarioBaja = request.get_json()
+    usuarioEliminar = usuarioBaja.get('usuario')
+    contraseñaEliminar = usuarioBaja.get('contraseña')
+
+    if not usuarioEliminar or not contraseñaEliminar:
+        return jsonify({'mensaje': 'Faltan datos'})
+    
+    with open ('data/usuarios.json', 'r') as f:
+        usuarios = json.load(f)
+
+    if usuarioEliminar not in usuarios or usuarios[usuarioEliminar] != contraseñaEliminar:
+        return jsonify({'mensaje': 'El nombre de usuario y/o contraseña no son correctos.'})
+    
+    
+    usuarios = {usuario:contraseña for usuario, contraseña in usuarios.items() if usuario != usuarioEliminar and contraseña != contraseñaEliminar}
+
+    with open('data/usuarios.json', 'w') as f:
+        json.dump(usuarios, f)
+
+    if len(usuarios) == len(usuarioBaja):
+        return jsonify({'mensaje': 'El usuario ha sido eliminado'})
+
+
+"""___MODIFICAR___"""
+@app.route('/modificar', methods=['PUT'])
+def moficarUsuario():
+    usuarioModificar = request.get_json()
+    usuarioNuevo = usuarioModificar.get('usuario')
+    contraseñaNueva = usuarioModificar.get('contraseña')
+
+    if not usuarioNuevo or not contraseñaNueva:
+        return jsonify({'mensaje': 'Faltan datos'})
+    
+    with open ('data/usuarios.json', 'r') as f:
+        usuarios = json.load(f)
+
+    if usuarioNuevo not in usuarios:
+        return jsonify({'mensaje': 'El nombre de usuario ya existe.'})
+    
+    usuarios[usuarioNuevo] = contraseñaNueva
+
+    with open('data/usuarios.json', 'w') as f:
+        json.dump(usuarios, f)
+
+    return jsonify({'mensaje': 'El usuario ha sido modificado.'})
 
     
     
+    
+
 
 
  
@@ -181,9 +330,13 @@ def devolverPeliculasPortada():
 
 @app.route('/publico', methods=['GET'])
 def devolverPublico():
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+    
     with open('data/peliculas.json', 'r') as f:
-        peliculas = json.load(f)
-    peliculasPublicas = peliculas
+        peliculas = json.load(f)    
+
+    peliculasPublicas = paginado(peliculas, pagina, porPagina)
     return jsonify(peliculasPublicas)
 
 

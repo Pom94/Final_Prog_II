@@ -98,5 +98,15 @@
      "sinopsis": "Tras la rebelión de los replicantes creados por bioingeniería para ser utilizados como mano de obra esclava y la prohibición a Tyrell Corporation de seguir con su fabricación, el empresario Niander Wallace adquirió lo que quedaba de Tyrell Corp. y creó una nueva línea de replicantes mucho más obedientes. Ahora, en el año 2049, los viejos modelos Nexus 8 que continúan con vida están siendo retirados. Los que les persiguen aún reciben el nombre de Blade Runner.",
      "imagen": "",
      "comentarios": []
+    },
+
+    {"id": 11,
+     "titulo": "Inception",
+     "anio": 2010,
+     "director": "Christopher Nolan",
+     "genero": "ciencia ficcion",
+     "sinopsis": "Dom Cobb es un ladrón con una extraña habilidad para entrar a los sueños de la gente y robarle los secretos de sus subconscientes. Su habilidad lo ha convertido en un atractivo en el mundo del espionaje corporativo, pero ha tenido un gran costo en la gente que ama. Cobb tiene la oportunidad de ser perdonado cuando recibe una tarea imposible: plantar una idea en la mente de una persona. Si tiene éxito, será el crimen perfecto, pero un enemigo se anticipa a sus movimientos.",
+     "imagen": "https://www.imdb.com/title/tt1375666/mediaviewer/rm3426651392/?ref_=ext_shr_lnk",
+     "comentarios": ["un clasico"]
     }
 ]
