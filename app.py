@@ -205,7 +205,7 @@ def paginado(i, pagina, porPagina):
 
 
 """___BUSCADOR DE PELICULAS___"""
-@app.route('/pelicula/<string:titulo>/buscar', methods=['GET'])
+"""@app.route('/pelicula/<string:titulo>/buscar', methods=['GET'])
 def buscarPelicula(titulo):
 
     pagina = int(request.args.get('pagina', 1))
@@ -220,7 +220,7 @@ def buscarPelicula(titulo):
         for pelicula in peliculas:
             if pelicula['titulo'] == titulo:
                 return jsonify(pelicula)
-        return jsonify({'mensaje': 'No se encontro pelicula'}, paginado(peliculas, pagina, porPagina))
+        return jsonify({'mensaje': 'No se encontro pelicula'}, paginado(peliculas, pagina, porPagina))"""
     
 
 
@@ -317,13 +317,59 @@ def moficarUsuario():
 
     return jsonify({'mensaje': 'El usuario ha sido modificado.'})
 
+
+"""___PUNTUACION___"""
+"""___AGREGAR PUNTUACION___"""
+@app.route('/pelicula/<string:titulo>/puntuar', methods=['POST'])
+def puntuarPelicula(titulo):
+    datos = request.get_json()
+    puntuacion = datos.get('puntuacion')
+
+    with open ('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    if not isinstance(puntuacion, int) or puntuacion < 0 or puntuacion > 10:
+        return jsonify({'mensaje': 'La puntuación tiene que ser un entero entre 0 y 10.'})
     
-    
+    for pelicula in peliculas:
+        if pelicula['titulo'] == titulo:
+            if 'usuario' in session:
+                pelicula['puntuacion'] += puntuacion
+                pelicula['puntuaciones totales'] += 1
+                return jsonify({'mensaje': 'Ha puntuado la pelicula.'}, pelicula)
+            else:
+                return jsonify({'mensaje': 'No ha inciado sesion.'})
+    return jsonify({'mensaje': 'No se encontro la pelicula.'})
+
+
+
+"""___CONTADOR DE VISUALIZACIONES Y BUSCADOR DE PELICULAS___"""
+
+@app.route('/pelicula/<string:titulo>/buscar', methods=['GET'])
+def pelicula(titulo):
+
+    pagina = int(request.args.get('pagina', 1))
+    porPagina = int(request.args.get('por pagina', 5))
+
+    with open ('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    for pelicula in peliculas:
+        if pelicula['titulo'] == titulo:
+            if 'usuario' in session:
+                pelicula['contador'] += 1
+                with open('peliculas.json', 'w') as f:
+                    json.dump(peliculas, f, indent=2)
+                return jsonify(pelicula)
+            else:
+                return jsonify({'mensaje': 'No ha inciado sesion.'})
+    return jsonify({'mensaje': 'No se encontro la pelicula.'}, paginado(peliculas, pagina, porPagina))
+
     
 
 
 
- 
+
 
 
 """___RUTA PARA PAGINA PÚBLICA___"""
