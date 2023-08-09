@@ -17,10 +17,13 @@ def menuPrivado():
         match opcion:
             case 1:
                 menuPeliculas()
+                break
             case 2:
                 menuDirectores()
+                break
             case 3:
                 menuGeneros()
+                break
             case 0:
                 print("Hasta luego.")
                 break
@@ -41,7 +44,7 @@ def menuPeliculas():
         print("\t4) Agregar una pelicula.")
         print("\t5) Borrar una pelicula.")
         print("\t6) Modificar una pelicula.")
-        print("\t7) Puntuar una pelicula.")
+        print("\t7) Puntuaciones.")
         print("\t8) Comentar una pelicula.")
         print(" ")
         print("\t0) Salir.")
@@ -81,10 +84,12 @@ def menuPeliculas():
                 sinopsis = input("\tSinopsis: ")
                 imagen = input("\tImagen: ")
                 modificarPelicula(pelicula, titulo, anio, director, genero, sinopsis, imagen)
-            #case 7:
-                #puntuarPelicula()
-            #case 8:
-                #comentarPelicula()
+            case 7:
+                menuPuntuar()
+                break
+            case 8:
+                menuComentarios()
+                break
             case 0:
                 menuPrivado()
                 break
@@ -272,17 +277,6 @@ def modificarPelicula(pelicula, titulo, anio, director, genero, sinopsis, imagen
 
 
 
-"""___ALTA PUNTUACION___"""
-#def puntuarPelicula():
-
-"""def comentarPelicula(pelicula, comentario):
-    if len(comentario) <= 0 or len(pelicula) <= 0:
-        return("Faltan datos.")
-    url = ("http://localhost:5000/", pelicula, "/editar")"""
-
-    
-
-
 
 """___MENU DIRECTORES___"""
 def menuDirectores():
@@ -358,9 +352,9 @@ def listaDirectores():
 """___ALTA DIRECTOR___"""
 def altaDirector(director):
 
-    director = {"director": director}
+    directorNuevo = {"director": director}
     url = ("http://localhost:5000/director/alta")
-    x = requests.post(url, json=director, cookies=sesion)
+    x = requests.post(url, json=directorNuevo, cookies=sesion)
 
     if x.status_code == 200:
         return ("\n\n\nDirector agregado.")
@@ -393,6 +387,182 @@ def modificarDirector(directorAnterior, directorModificado):
     else:
         return("Error.")
     
+
+
+
+"""___MENU PUNTUAR___"""
+def menuPuntuar():
+    while True:
+        print("-PUNTUACION-")
+        print("Elija una opcion:")
+        print(" ")
+        print("\t1) Agregar una puntuacion.")
+        print("\t2) Borrar una puntuacion.")
+        print("\t3) Modificar una puntuacion.")
+        print(" ")
+        print("\t0) Salir.")
+
+        opcion = int(input())
+        match opcion:
+            case 1:
+                print("\n\n\n-PUNTUAR-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                puntuacion = int(input("\tIngrese la puntuacion: "))
+                puntuarPelicula(pelicula, puntuacion)
+            case 2:
+                print("\n\n\n-ELIMINAR PUNTUACION-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                puntuacionEliminar = int(input("\tIngrese la puntuacion: "))
+                borrarPuntuacion(pelicula, puntuacionEliminar)
+            case 3:
+                print("\n\n\n-MODIFICAR PUNTUACION-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                puntuacionNueva = int(input("\tIngrese la puntuacion: "))
+                editarPuntuacion(pelicula, puntuacionNueva)
+            case 0:
+                menuPrivado()
+                break
+            case _:
+                print("Opcion incorrecta.")
+
+
+
+"""___PUNTUAR____"""
+def puntuarPelicula(pelicula, puntuacion):
+
+    puntuacion = {"puntuacion": puntuacion}
+    url = (f"http://localhost:5000/pelicula/{pelicula}/puntuar")
+    x = requests.post(url, json=puntuacion, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\tPuntuacion hecha.")
+    else:
+        error = x.json()
+        print(error)
+        return("Error.")
+    
+
+
+
+
+"""___ELIMINAR PUNTUACION___"""
+def borrarPuntuacion(pelicula, puntuacion):
+
+    url = (f"http://localhost:5000/pelicula/{pelicula}/eliminar puntuacion")
+    puntuacionEliminar = {"puntuacion": puntuacion}    
+    x = requests.delete(url, json=puntuacionEliminar, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\nPuntuacion eliminada.")
+    else:
+        error = x.json()
+        print(error)
+        return("Error.")
+    
+
+
+
+"""___EDITAR PUNTUACION___""" 
+def editarPuntuacion(pelicula, puntuacion):
+
+    url = (f"http://localhost:5000/pelicula/{pelicula}/editar puntuacion")
+    puntuacionModificar = {"puntuacion": puntuacion}
+    x = requests.put(url, json=puntuacionModificar, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\nPuntuacion modificada.")
+    else:
+        error = x.json()
+        print("ERROR")
+        print(error)
+        return("Error.")
+    
+
+
+"""___MENU COMENTARIOS___"""
+def menuComentarios():
+    while True:
+        print("-COMENTARIOS-")
+        print("Elija una opcion:")
+        print(" ")
+        print("\t1) Agregar un comentario.")
+        print("\t2) Borrar un comentario.")
+        print("\t3) Modificar un comentario.")
+        print(" ")
+        print("\t0) Salir.")
+
+        opcion = int(input())
+        match opcion:
+            case 1:
+                print("\n\n\n-COMENTAR-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                comentario = input("\tIngrese el comentario: ")
+                comentarPelicula(pelicula, comentario)
+            case 2:
+                print("\n\n\n-ELIMINAR COMENTARIO-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                borrarComentario(pelicula)
+            case 3:
+                print("\n\n\n-MODIFICAR COMENTARIO-")
+                pelicula = input("\tIngrese el nombre de la pelicula: ")
+                comentarioModificar = input("\tIngrese el comentario: ")
+                editarComentario(pelicula, comentarioModificar)
+            case 0:
+                menuPrivado()
+                break
+            case _:
+                print("Opcion incorrecta.")
+
+
+
+"""___COMENTAR____"""
+def comentarPelicula(pelicula, comentario):
+
+    comentar = {"comentario": comentario}
+    url = (f"http://localhost:5000/pelicula/{pelicula}/comentario")
+    x = requests.post(url, json=comentar, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\Comentario hecho.")
+    else:
+        error = x.json()
+        print(error)
+        return("Error.")
+    
+
+
+
+
+"""___ELIMINAR COMENTARIO___"""
+def borrarComentario(pelicula):
+
+    url = (f"http://localhost:5000/pelicula/{pelicula}/comentario/eliminar") 
+    x = requests.delete(url, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\nComentario eliminada.")
+    else:
+        error = x.json()
+        print(error)
+        return("Error.")
+    
+
+
+
+"""___EDITAR COMENTARIO___""" 
+def editarComentario(pelicula, comentario):
+
+    url = (f"http://localhost:5000/pelicula/{pelicula}/comentario/editar")
+    comentarioModificar = {"comentario": comentario}
+    x = requests.put(url, json=comentarioModificar, cookies=sesion)
+
+    if x.status_code == 200:
+        return ("\n\n\nComentario modificado.")
+    else:
+        error = x.json()
+        print("ERROR")
+        print(error)
+        return("Error.")
 
 
 

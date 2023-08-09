@@ -736,6 +736,9 @@ def editarComentario(titulo):
 
 
 
+
+"""___ELIMINAR COMENTARIO"""
+
 @app.route('/pelicula/<string:titulo>/comentario/eliminar', methods=['DELETE'])
 def eliminarComentario(titulo):
     usuario = session.get('usuario')
