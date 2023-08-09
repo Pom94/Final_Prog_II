@@ -17,9 +17,14 @@
         "anio": 2023,
         "director": "Christopher Nolan",
         "genero": "thriller bibliografico",
-        "sinopsis": "El f\u00c3\u00adsico J Robert Oppenheimer trabaja con un equipo de cient\u00c3\u00adficos durante el Proyecto Manhattan, que condujo al desarrollo de la bomba at\u00c3\u00b3mica.",
+        "sinopsis": "El f\u00c3\u00adsico J Robert Oppenheimer trabaja con un equipo de cient\u00c3\u00adficos durante el Proyecto Manhattan, que condujo al desarrollo de la bomba atomica.",
         "imagen": "https://www.imdb.com/title/tt15398776/mediaviewer/rm2670601217/?ref_=ext_shr_lnk",
-        "comentarios": ["ta weno, ya quiero ver la dos", "Todo lo que tenga a Cillian Murphy es recomendado"],
+        "comentarios": [
+            {"comentario": "ta weno, ya quiero ver la dos", "usuario": "random1"},
+            {"comentario": "Todo lo que tenga a Cillian Murphy es recomendado", "usuario": "random2"},
+            {"comentario": "NO A LA PIROTECNIA", "usuario": "cocoloco"}
+            
+        ],
         "puntuacion": [],
         "puntuaciones totales": 0,
         "contador": 0
@@ -33,7 +38,7 @@
         "imagen": "https://www.imdb.com/title/tt7599146/mediaviewer/rm1045832449/?ref_=ext_shr_lnk",
         "comentarios": 
         [
-            "no se, mi mujer me dijo que la vea"
+            {"comentario": "no se, mi mujer me dijo que la vea", "usuario": "random1"}
         ],
         "puntuacion": [],
         "puntuaciones totales": 0,
@@ -49,8 +54,8 @@
         "imagen": "https://www.imdb.com/title/tt3659388/mediaviewer/rm1391324160/?ref_=ext_shr_lnk",
         "comentarios":
         [
-            "moy boena",
-            "excelente pelicula!!!"
+            {"comentario": "moy boena", "usuario": "random1"},
+            {"comentario": "excelente pelicula!!!", "usuario": "random2"}
         ],
         "puntuacion": [],
         "puntuaciones totales": 0,
@@ -66,8 +71,8 @@
         "imagen": "",
         "comentarios": 
         [
-            "no la recomiendo,el cgi dio cringe",
-            "No entiendo c\u00c3\u00b3mo pueden criticar esta pelicula, las cuestiones legales del actor no tendr\u00c3\u00adan que influenciar en la opinion de la pelicula y sobre el CGI... el director ya explic\u00c3\u00b3 que fue a proposito! y lo--*m\u00c3\u00a1s texto de fan..*"
+            {"comentario": "no la recomiendo,el cgi dio cringe", "usuario": "random1"},
+            {"comentario": "No entiendo c\u00c3\u00b3mo pueden criticar esta pelicula, las cuestiones legales del actor no tendr\u00c3\u00adan que influenciar en la opinion de la pelicula y sobre el CGI... el director ya explic\u00c3\u00b3 que fue a proposito! y lo--*m\u00c3\u00a1s texto de fan..*", "usuario": "random2"}
         ],
         "puntuacion": [],
         "puntuaciones totales": 0,
@@ -96,10 +101,10 @@
         "imagen": "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/?ref_=ext_shr_lnk",
         "comentarios": 
         [
-            "AMO",
-            "estoy enamorado de esta pelicula",
-            "Hans Zimmer lo hizo de nuevo, simplemente espectacular",
-            "Interstellar es una aut\u00c3\u00a9ntica obra maestra cinematogr\u00c3\u00a1fica. Christopher Nolan logra una sinfon\u00c3\u00ada visual y narrativa que simplemente te transporta a dimensiones desconocidas. Los efectos especiales, deslumbrantes, y la actuaci\u00c3\u00b3n de Matthew McConaughey, simplemente sublime. La pel\u00c3\u00adcula es un deleite para los sentidos, un viaje emocional que te atrapa y te lleva a reflexionar sobre nuestra existencia en el vasto universo. La forma en que Nolan juega con el tiempo y el espacio es exquisita y te obliga a pensar en lo insignificantes que somos en la inmensidad del cosmos. Adem\u00c3\u00a1s, la banda sonora de Hans Zimmer es celestial, eleva cada escena a otro nivel de grandiosidad. Sin duda, Interstellar es una experiencia cinematogr\u00c3\u00a1fica que todo verdadero conocedor del s\u00c3\u00a9ptimo arte deber\u00c3\u00ada disfrutar. Es como una danza c\u00c3\u00b3smica, una poes\u00c3\u00ada visual que deja una huella imborrable en tu alma."
+            {"comentario": "AMO", "usuario": "random1"},
+            {"comentario": "estoy enamorado de esta pelicula", "usuario": "random2"},
+            {"comentario": "Hans Zimmer lo hizo de nuevo, simplemente espectacular", "usuario": "random3"},
+            {"comentario": "Interstellar es una aut\u00c3\u00a9ntica obra maestra cinematogr\u00c3\u00a1fica. Christopher Nolan logra una sinfon\u00c3\u00ada visual y narrativa que simplemente te transporta a dimensiones desconocidas. Los efectos especiales, deslumbrantes, y la actuaci\u00c3\u00b3n de Matthew McConaughey, simplemente sublime. La pel\u00c3\u00adcula es un deleite para los sentidos, un viaje emocional que te atrapa y te lleva a reflexionar sobre nuestra existencia en el vasto universo. La forma en que Nolan juega con el tiempo y el espacio es exquisita y te obliga a pensar en lo insignificantes que somos en la inmensidad del cosmos. Adem\u00c3\u00a1s, la banda sonora de Hans Zimmer es celestial, eleva cada escena a otro nivel de grandiosidad. Sin duda, Interstellar es una experiencia cinematogr\u00c3\u00a1fica que todo verdadero conocedor del s\u00c3\u00a9ptimo arte deber\u00c3\u00ada disfrutar. Es como una danza c\u00c3\u00b3smica, una poes\u00c3\u00ada visual que deja una huella imborrable en tu alma.", "usuario": "random4"}
         ], 
         "puntuacion": [],
         "puntuaciones totales": 0,
@@ -128,8 +133,8 @@
         "imagen": "https://www.imdb.com/title/tt7286456/mediaviewer/rm3353122305/?ref_=ext_shr_lnk",
         "comentarios": 
         [
-            "me encanto, aunque ahora me quiero pegar un tiro",
-            "NOMEGUSTOME PARESIO MUY TRISTE JOAQUIN FENIX DEVERIA HASER COSAS MAS BELLA KOMO LQA PELICULA MUGER VONITA"
+            {"comentario": "me encanto, aunque ahora me quiero pegar un tiro", "usuario": "random1"},
+            {"comentario": "NOMEGUSTOME PARESIO MUY TRISTE JOAQUIN FENIX DEVERIA HASER COSAS MAS BELLA KOMO LQA PELICULA MUGER VONITA", "usuario": "random33"}
         ],
         "puntuacion": [],
         "puntuaciones totales": 0,
@@ -158,7 +163,7 @@
         "imagen": "https://www.imdb.com/title/tt1375666/mediaviewer/rm3426651392/?ref_=ext_shr_lnk",
         "comentarios": 
         [
-            "un clasico"
+            {"comentario": "un clasico", "usuario": "randomeeee"}
         ],
         "puntuacion": [],
         "puntuaciones totales": 0,

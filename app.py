@@ -409,6 +409,9 @@ def altaDirector():
     if not directorNuevo:
         return jsonify({'mensaje': 'Faltan datos.'}), 400
     
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
+    
     with open('data/directores.json', 'r') as f:
         directores  = json.load(f)
 
@@ -432,6 +435,9 @@ def bajaDirector():
 
     if not directorEliminar:
         return jsonify({'mensaje': 'Faltan datos.'}), 400
+    
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
     
     with open('data/directores.json', 'r') as f:
         directores  = json.load(f)
@@ -457,6 +463,9 @@ def modificarDirector():
 
     if not directorViejo or not directoNuevo:
         return jsonify({'mensaje': 'Faltan datos.'}), 400
+    
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
     
     with open('data/directores.json', 'r') as f:
         directores  = json.load(f)
@@ -486,6 +495,7 @@ def altaUsuario():
 
     if not usuarioNuevo or not contraseñaNueva:
         return jsonify({'mensaje': 'Faltan datos'}), 400
+    
     
     with open('data/usuarios.json', 'r') as f:
         usuarios = json.load(f)
@@ -620,6 +630,9 @@ def editarPuntuacion(titulo):
     puntuacionNueva = datos.get('puntuacion')
     usuario = session.get('usuario')
 
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
+
     with open('data/peliculas.json', 'r') as f:
         peliculas = json.load(f)
 
@@ -663,9 +676,87 @@ def pelicula(titulo):
                 return jsonify({'mensaje': 'No ha inciado sesion.'}), 401
     return jsonify({'mensaje': 'No se encontro la pelicula.'}, paginado(peliculas, pagina, porPagina)), 400
 
+
+
+"""___COMENTAR___"""
+@app.route('/pelicula/<string:titulo>/comentario', methods=['POST'])
+def dejarComentario(titulo):
+    datos = request.get_json()
+    comentario = datos.get('comentario')
+    usuario = session.get('usuario')
+
+    with open('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
+
+    for pelicula in peliculas:
+        if pelicula['titulo'] == titulo:
+            comentarioNuevo = {
+                'comentario': comentario,
+                'usuario': usuario
+            }
+            pelicula['comentarios'].append(comentarioNuevo)
+
+            with open('data/peliculas.json', 'w') as f:
+                json.dump(peliculas, f)
+
+            return jsonify({'mensaje': 'Ha comentado la pelicula.'}), 200
+        
+    return jsonify({'mensaje': 'No se encontro la pelicula.'}), 404
+
     
 
+"""___EDITAR COMENTARIO"""
 
+@app.route('/pelicula/<string:titulo>/comentario/editar', methods=['PUT'])
+def editarComentario(titulo):
+    datos = request.get_json()
+    nuevoComentario = datos.get('comentario')
+    usuario = session.get('usuario')
+
+    with open('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
+
+    for pelicula in peliculas:
+        if pelicula['titulo'] == titulo:
+            for comentario in pelicula['comentarios']:
+                if comentario['usuario'] == usuario:
+                    comentario['comentario'] = nuevoComentario
+                    with open('data/peliculas.json', 'w') as f:
+                        json.dump(peliculas, f)
+                    return jsonify({'mensaje': 'Comentario editado correctamente.'}), 200
+            return jsonify({'mensaje': 'No se encontro comentario.'}), 404
+    return jsonify({'mensaje': 'No se encontro la pelicula.'}), 404
+
+
+
+
+@app.route('/pelicula/<string:titulo>/comentario/eliminar', methods=['DELETE'])
+def eliminarComentario(titulo):
+    usuario = session.get('usuario')
+
+    with open('data/peliculas.json', 'r') as f:
+        peliculas = json.load(f)
+
+    if 'usuario' not in session:
+        return jsonify({'mensaje': 'No ha iniciado sesion'}), 401
+
+    for pelicula in peliculas:
+        if pelicula['titulo'] == titulo:
+            comentarios = pelicula['comentarios']
+            for comentario in comentarios:
+                if comentario['usuario'] == usuario:
+                    comentarios.remove(comentario)
+                    with open('data/peliculas.json', 'w') as f:
+                        json.dump(peliculas, f)
+                    return jsonify({'mensaje': 'Comentario eliminado.'}), 200
+            return jsonify({'mensaje': 'No se encontro comentario.'}), 404
+    return jsonify({'mensaje': 'No se encontro la pelicula.'}), 404
 
 
 
