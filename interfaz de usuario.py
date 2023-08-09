@@ -615,7 +615,9 @@ def listaGeneros():
         print("\t", generos)
 
     else:
-        return ("Error.")
+        error = x.json()
+        print("ERROR")
+        print(error)
     
 
 """___ALTA GENERO___"""
@@ -628,7 +630,9 @@ def altaGenero(genero):
     if x.status_code == 200:
         return ("\n\n\nGenero agregado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("ERROR")
+        print(error)
     
 
 """___ELIMINAR GENERO___"""
@@ -641,7 +645,9 @@ def borrarGenero(genero):
     if x.status_code == 200:
         return ("Genero eliminado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("ERROR")
+        print(error)
     
 
 """___EDITAR GENERO___""" 
@@ -654,7 +660,9 @@ def modificarGenero(generoAnterior, generoModificado):
     if x.status_code == 201:
         return ("Genero modificado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("ERROR")
+        print(error)
         
 
 
@@ -675,7 +683,9 @@ def inciarSesion(usuario, contraseña):
         sesion = x.cookies
         print("\n\nHa iniciado sesion.")
     else:
-        print("El usuario y/o contraseña son incorrectos.")
+        error = x.json()
+        print("ERROR")
+        print(error)
     
 
 
@@ -683,33 +693,36 @@ def inciarSesion(usuario, contraseña):
 
 def cerrarSesion():
 
+    global sesion
     x = requests.post("http://localhost:5000/cerrar sesion", cookies=sesion)
-    if x.status_code == 200:
+
+    if x.status_code == 200:        
         sesion = None
         print("Ha cerrado sesion.")
     else:
-        print("No ha iniciado sesion.")
+        error = x.json()
+        print("ERROR")
+        print(error)
 
 
 
 """___REGISTRAR___"""
 def registrar(usuario, contraseña):
-    global sesion
 
+    global sesion
     datos = {"usuario": usuario, "contraseña": contraseña}
     x = requests.post("http://localhost:5000/registrar", json=datos)
 
     if x.status_code == 200:
         sesion = x.cookies
-        print("Se ha registrado correctamente..")
+        print("Se ha registrado correctamente.")
         return True
-    else:
+    else:        
+        error = x.json()
+        print("ERROR")
+        print(error)
         print("No se puede registrar")
 
-
-
-
-"""___VERIFICAR OPCION___"""
 
 
 

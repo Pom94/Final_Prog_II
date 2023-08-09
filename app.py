@@ -42,13 +42,17 @@ def registrar():
     usuario = datos['usuario']
     contraseña = datos['contraseña']
 
+
+    if not usuario or not contraseña:
+        return jsonify({'mensaje': 'Faltan datos.'}), 400
+    
     with open('data/usuarios.json', 'r') as f:
         usuarios = json.load(f)
 
-    usuarios[usuario] = contraseña
-
     if usuario in usuarios:
         return jsonify({'mensaje': 'El usuario ya existe.'}), 400
+    
+    usuarios[usuario] = contraseña
 
     with open('data/usuarios.json', 'w') as f:
         json.dump(usuarios, f)
