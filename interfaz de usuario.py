@@ -10,7 +10,8 @@ def menuPrivado():
         print("\t1) Peliculas.")
         print("\t2) Directores")
         print("\t3) Generos.")
-        print(" ")
+        print("\t4) Dar de baja usuario.")
+        print("\t5) Modificar usuario.")
         print("\t0) Salir.")
 
         opcion = int(input())
@@ -24,11 +25,58 @@ def menuPrivado():
             case 3:
                 menuGeneros()
                 break
+            case 4:
+                usuario = input("Ingrese su usuario: ")
+                contraseña = input("Ingrese contraseña: ")
+                contraseñaRepetir = input("Ingrese su contraseña nuevamente: ")
+                bajaUsuario(usuario, contraseña, contraseñaRepetir)
+            case 5:
+                usuario = input("Ingrese su usuario: ")
+                contraseña = input("Ingrese contraseña: ")
+                contraseñaRepetir = input("Ingrese su contraseña nuevamente: ")
+                modificarUsuario(usuario, contraseña, contraseñaRepetir)
             case 0:
                 print("Hasta luego.")
                 break
             case _:
                 print("Opcion incorrecta.")
+
+def bajaUsuario(usuario, contraseña, contraseñaRepetir):
+
+    if contraseña == contraseñaRepetir:
+        url = ("http://localhost:5000/usuario/baja")
+        usuarioEliminar = {"usuario": usuario, "contraseña": contraseña}
+        x = requests.delete(url, json=usuarioEliminar, cookies=sesion)
+
+        if x.status_code == 200:
+            return ("Usuario eliminado")        
+        else:
+            error = x.json()
+            print("\n\n\n", error)
+            print("ERROR")
+    else:
+        return ("Contraseña incorrecta")
+    
+
+def modificarUsuario(usuario, contraseña, contraseñaRepetir):
+
+    if contraseña == contraseñaRepetir:
+        url = ("http://localhost:5000/usuario/modificar")
+        nuevoUsuario = input("Ingrese nuevo usuario: ")
+        nuevaContraseña = input("Ingrese nueva contraseña: ")
+        usuarioModificar = {"usuario": usuario, "usuario nuevo": nuevoUsuario, "contraseña nueva": nuevaContraseña}
+        x = requests.put(url, json=usuarioModificar, cookies=sesion)
+
+        if x.status_code == 200:
+            return ("Usuario modificado")        
+        else:
+            error = x.json()
+            print("\n\n\n", error)
+            print("ERROR")
+    else:
+        return ("Contraseña incorrecta")
+
+    
 
 
 
@@ -139,7 +187,9 @@ def buscarPelicula(peliculaBuscar):
 
         print("\tVisitas:", pelicula['contador'])
     else:
-        return ("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
 
 
 
@@ -187,7 +237,9 @@ def peliculaDirector(director):
 
             print("\tVisitas:", pelicula['contador'])
     else:
-        return ("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
 
 
 
@@ -228,7 +280,9 @@ def peliculaPortada():
 
             print("\tVisitas:", pelicula['contador'])
     else:
-        return ("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
 
 
 
@@ -242,6 +296,8 @@ def agregarPelicula(titulo, anio, director, genero, sinopsis, imagen, ):
     if x.status_code == 200:
         print ("Pelicula agregada.")
     else:
+        error = x.json()
+        print("\n\n\n", error)
         print("Error.")
     
 
@@ -256,7 +312,9 @@ def borrarPelicula(pelicula):
     if x.status_code == 200:
         return ("Pelicula eliminada.")
     else:
-        return("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
 
 
 
@@ -272,7 +330,9 @@ def modificarPelicula(pelicula, titulo, anio, director, genero, sinopsis, imagen
     if x.status_code == 201:
         return ("Pelicula modificada.")
     else:
-        return("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
     
 
 
@@ -331,7 +391,9 @@ def buscardirector(director):
         print("\t", director)
 
     else:
-        return ("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print ("Error.")
     
 
 
@@ -346,7 +408,9 @@ def listaDirectores():
         print("\t", directores)
 
     else:
-        return ("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print ("Error.")
     
 
 """___ALTA DIRECTOR___"""
@@ -359,7 +423,9 @@ def altaDirector(director):
     if x.status_code == 200:
         return ("\n\n\nDirector agregado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
     
 
 """___ELIMINAR PELICULA___"""
@@ -372,7 +438,9 @@ def borrarDirector(director):
     if x.status_code == 200:
         return ("Director eliminado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
     
 
 """___EDITAR DIRECTOR___""" 
@@ -385,7 +453,9 @@ def modificarDirector(directorAnterior, directorModificado):
     if x.status_code == 201:
         return ("Director modificado.")
     else:
-        return("Error.")
+        error = x.json()
+        print("\n\n\n", error)
+        print("Error.")
     
 
 
@@ -438,7 +508,7 @@ def puntuarPelicula(pelicula, puntuacion):
         return ("\n\n\tPuntuacion hecha.")
     else:
         error = x.json()
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
     
 
@@ -456,7 +526,7 @@ def borrarPuntuacion(pelicula, puntuacion):
         return ("\n\n\nPuntuacion eliminada.")
     else:
         error = x.json()
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
     
 
@@ -474,7 +544,7 @@ def editarPuntuacion(pelicula, puntuacion):
     else:
         error = x.json()
         print("ERROR")
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
     
 
@@ -526,7 +596,7 @@ def comentarPelicula(pelicula, comentario):
         return ("\n\n\Comentario hecho.")
     else:
         error = x.json()
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
     
 
@@ -543,7 +613,7 @@ def borrarComentario(pelicula):
         return ("\n\n\nComentario eliminada.")
     else:
         error = x.json()
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
     
 
@@ -561,7 +631,7 @@ def editarComentario(pelicula, comentario):
     else:
         error = x.json()
         print("ERROR")
-        print(error)
+        print("\n\n\n", error)
         return("Error.")
 
 
@@ -616,8 +686,8 @@ def listaGeneros():
 
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
     
 
 """___ALTA GENERO___"""
@@ -631,8 +701,8 @@ def altaGenero(genero):
         return ("\n\n\nGenero agregado.")
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
     
 
 """___ELIMINAR GENERO___"""
@@ -646,8 +716,9 @@ def borrarGenero(genero):
         return ("Genero eliminado.")
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
+
     
 
 """___EDITAR GENERO___""" 
@@ -661,8 +732,9 @@ def modificarGenero(generoAnterior, generoModificado):
         return ("Genero modificado.")
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
+
         
 
 
@@ -684,8 +756,9 @@ def inciarSesion(usuario, contraseña):
         print("\n\nHa iniciado sesion.")
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
+        
     
 
 
@@ -701,8 +774,8 @@ def cerrarSesion():
         print("Ha cerrado sesion.")
     else:
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
 
 
 
@@ -719,8 +792,8 @@ def registrar(usuario, contraseña):
         return True
     else:        
         error = x.json()
+        print("\n\n\n", error)
         print("ERROR")
-        print(error)
         print("No se puede registrar")
 
 
@@ -729,7 +802,7 @@ def registrar(usuario, contraseña):
 
 """___MENU PUBLICO___"""
 while True:
-    print("BIENVENIDO! ELIJA UNA OPCION:")
+    print("\n\n\nBIENVENIDO! ELIJA UNA OPCION:")
     print(" ")
     print("\t1) Iniciar sesion.")
     print("\t2) Registrarse.")
@@ -754,8 +827,9 @@ while True:
         case 4:
             publico = (requests.get("http://localhost:5000/publico")).json()
 
+
             for pelicula in publico:
-                print("*" , pelicula['titulo'])
+                print("\n\n\n\n\n*" , pelicula['titulo'])
                 print("\tAño:", pelicula['anio'])
                 print("\tDirector:", pelicula['director'])
                 print("\tGenero:", pelicula['genero'])
@@ -785,6 +859,111 @@ while True:
                     print("")
 
                 print("\tVisitas:", pelicula['contador'])
+
+            contadorPag = 1
+
+            print("\n\n\nSiguiente pagina (Ingrese S): ")
+            print("Retroceder pagina (Ingrese R): ")
+            print("Salir (Ingrese 0): ")
+            
+
+            opcion = input()
+
+            while opcion != 0:
+
+                if opcion == "S":
+                    contadorPag += 1
+                    publico = (requests.get(f"http://localhost:5000/publico?pagina={contadorPag}")).json()
+                        
+                    for pelicula in publico:
+                        print("\n\n\n\n*" , pelicula['titulo'])
+                        print("\tAño:", pelicula['anio'])
+                        print("\tDirector:", pelicula['director'])
+                        print("\tGenero:", pelicula['genero'])
+                        print("\tSinopsis:", pelicula['sinopsis'])
+
+                        if len(pelicula['imagen']) > 0:
+                            print("\tPortada:", pelicula['imagen'])
+                        else:
+                            print("\tPortada: (No tiene portada registrada)")
+
+                        puntuaciones = pelicula['puntuacion']
+                        if puntuaciones:
+                            puntuacionesTotal = len(puntuaciones)
+                            suma = sum(puntuacion['puntuacion'] for puntuacion in puntuaciones)
+                            promedio = suma / puntuacionesTotal
+                            print("\tPuntuacion:", promedio)
+                        else:
+                            print("\tPuntuacion: (No ha sido puntuada)", )
+
+                        if len(pelicula['comentarios']) > 0:
+                            print("\tComentarios:")
+                            for comentario in pelicula['comentarios']:
+                                print("/t", comentario)
+                                print("")
+                        else:
+                            print("\tComentarios: (No tiene comentarios registrados.)")
+                            print("")
+
+                        print("\tVisitas:", pelicula['contador'])
+
+                    print("\n\n\nSiguiente pagina (Ingrese S): ")
+                    print("Retroceder pagina (Ingrese R): ")
+                    print("Salir (Ingrese 0): ")
+                    opcion = input()
+
+
+                if opcion == "R" and contadorPag > 0:
+                    contadorPag -= 1
+                    publico = (requests.get(f"http://localhost:5000/publico?pagina={contadorPag}")).json()
+                        
+                    for pelicula in publico:
+                        print("\n\n\n\n*" , pelicula['titulo'])
+                        print("\tAño:", pelicula['anio'])
+                        print("\tDirector:", pelicula['director'])
+                        print("\tGenero:", pelicula['genero'])
+                        print("\tSinopsis:", pelicula['sinopsis'])
+
+                        if len(pelicula['imagen']) > 0:
+                            print("\tPortada:", pelicula['imagen'])
+                        else:
+                            print("\tPortada: (No tiene portada registrada)")
+
+                        puntuaciones = pelicula['puntuacion']
+                        if puntuaciones:
+                            puntuacionesTotal = len(puntuaciones)
+                            suma = sum(puntuacion['puntuacion'] for puntuacion in puntuaciones)
+                            promedio = suma / puntuacionesTotal
+                            print("\tPuntuacion:", promedio)
+                        else:
+                            print("\tPuntuacion: (No ha sido puntuada)", )
+
+                        if len(pelicula['comentarios']) > 0:
+                            print("\tComentarios:")
+                            for comentario in pelicula['comentarios']:
+                                print("/t", comentario)
+                                print("")
+                        else:
+                            print("\tComentarios: (No tiene comentarios registrados.)")
+                            print("")
+
+                        print("\tVisitas:", pelicula['contador'])
+
+                    print("\n\n\nSiguiente pagina (Ingrese S): ")
+                    print("Retroceder pagina (Ingrese R): ")
+                    print("Salir (Ingrese 0): ")
+                    opcion = input()
+
+
+                if contadorPag == 0:
+                    print("\n\n\n\nNo hay más páginas.")
+                    print("\n\n\nSiguiente pagina (Ingrese S): ")
+                    print("Retroceder pagina (Ingrese R): ")
+                    print("Salir (Ingrese 0): ")
+
+
+                if opcion == "0":
+                    break
                 
         case 0:
             print("Hasta luego.")

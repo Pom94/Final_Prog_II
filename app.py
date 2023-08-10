@@ -491,7 +491,7 @@ def modificarDirector():
 
 """___ABM DE USUARIOS___"""
 """___ALTA___"""
-@app.route('/registrar', methods=['POST'])
+@app.route('/registrarse', methods=['POST'])
 def altaUsuario():
 
     usuarioNuevo = request.get_json('usuario')
@@ -514,7 +514,7 @@ def altaUsuario():
 
 
 """___BAJA___"""
-@app.route('/baja', methods=['DELETE'])
+@app.route('/usuario/baja', methods=['DELETE'])
 def bajaUsuario():
     usuarioBaja = request.get_json()
     usuarioEliminar = usuarioBaja.get('usuario')
@@ -525,6 +525,11 @@ def bajaUsuario():
     
     with open ('data/usuarios.json', 'r') as f:
         usuarios = json.load(f)
+
+    if usuarioEliminar != session['usuario']:
+        print (session)
+        return jsonify({'mensaje': 'No puede eliminar un usuario que noe s suyo'}), 400
+    
 
     if usuarioEliminar not in usuarios or usuarios[usuarioEliminar] != contraseñaEliminar:
         return jsonify({'mensaje': 'El nombre de usuario y/o contraseña no son correctos.'}), 400
@@ -540,22 +545,31 @@ def bajaUsuario():
 
 
 """___MODIFICAR___"""
-@app.route('/modificar', methods=['PUT'])
+@app.route('/usuario/modificar', methods=['PUT'])
 def moficarUsuario():
     usuarioModificar = request.get_json()
-    usuarioNuevo = usuarioModificar.get('usuario')
-    contraseñaNueva = usuarioModificar.get('contraseña')
+    usuarioViejo = usuarioModificar.get('usuario')
+    usuarioNuevo = usuarioModificar.get('usuario nuevo')
+    contraseñaNueva = usuarioModificar.get('contraseña nueva')
 
-    if not usuarioNuevo or not contraseñaNueva:
+    if not usuarioViejo or not usuarioNuevo or not contraseñaNueva:
         return jsonify({'mensaje': 'Faltan datos'}), 400
     
     with open ('data/usuarios.json', 'r') as f:
         usuarios = json.load(f)
 
-    if usuarioNuevo not in usuarios:
+    if usuarioViejo != session['usuario']:
+        return jsonify({'mensaje': 'No puede modificar un usuario que noe s suyo'}), 400
+        
+
+    if usuarioNuevo in usuarios:
         return jsonify({'mensaje': 'El nombre de usuario ya existe.'}), 400
     
+    del usuarios[usuarioViejo]
     usuarios[usuarioNuevo] = contraseñaNueva
+    session.pop('usuario', None)
+    session['usuario'] = usuarioNuevo
+
 
     with open('data/usuarios.json', 'w') as f:
         json.dump(usuarios, f)
@@ -778,8 +792,18 @@ def devolverPublico():
     with open('data/peliculas.json', 'r') as f:
         peliculas = json.load(f)    
 
-    peliculasPublicas = paginado(peliculas, pagina, porPagina)
-    return jsonify(peliculasPublicas), 200
+    peliculasPublicas = []
+    contador = 0
+
+    for pelicula in reversed(peliculas):
+        if contador < 10:
+            peliculasPublicas.append(pelicula)
+
+        contador += 1
+            
+            
+
+    return jsonify(paginado(peliculasPublicas, pagina, porPagina)), 200
 
 
     
